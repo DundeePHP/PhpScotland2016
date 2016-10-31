@@ -1,0 +1,20 @@
+{
+	"name": "PhpScotland2016/Croosbar-Router",
+	"description": "Demo of Crossbar router",
+	"license": "PHP",
+	"keywords": ["phpscotland", "phpscotland2016"],
+	"authors": [{
+			"name": "Andy Kirkham",
+			"email": "andy@spiders-lair.com"
+	}],
+	"require": {
+		"voryx/thruway": "0.3.*",
+		"react/react": ">=0.4",
+		"react/event-loop": ">=0.4.2",
+		"react/zmq": ">=0.3",
+		"ratchet/pawl": ">=0.1"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "4.0.*"
+	}
+}

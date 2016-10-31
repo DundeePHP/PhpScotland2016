@@ -1,0 +1,35 @@
+{
+	"name": "PhpScotland2016/Reactor-ZMQ",
+	"description": "Demo of ZMQ reactor",
+	"license": "PHP",
+	"keywords": ["phpscotland", "phpscotland2016"],
+	"authors": [{
+			"name": "Andy Kirkham",
+			"email": "andy@spiders-lair.com"
+	}],
+	"repositories": [
+	{
+		"type": "vcs",
+		"url": "https://github.com/A-j-K/PhpScotland2016-DemoServiceIf.git",
+		"package-path": "PhpScotland2016/DemoServiceInterface"
+	},{
+		"type": "vcs",
+		"url": "https://github.com/stellartech/PhpScotland2016-DemoServiceImplDirect.git",
+		"package-path": "PhpScotland2016/DemoServiceImplDirect"
+	},{
+		"type": "vcs",
+		"url": "https://github.com/stellartech/PhpScotland2016-DemoServiceImplRmq.git",
+		"package-path": "PhpScotland2016/DemoServiceImplRmq"
+        }
+	],
+	"require": {
+		"ext-zmq": "*",
+		"php-amqplib/php-amqplib": "2.6.*",
+		"PhpScotland2016/DemoServiceImplRmq": "dev-master",
+		"PhpScotland2016/DemoServiceImplDirect": "dev-master",
+		"PhpScotland2016/DemoServiceInterface": "1.0.0.x-dev"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "4.0.*"
+	}
+}

@@ -1,0 +1,138 @@
+version: '2.0'
+networks: {}
+services:
+  phpscotland2016-crossbar:
+    build:
+      context: ./crossbar
+    environment:
+      CROSSBAR_HOST: phpscotland2016-crossbar
+      CROSSBAR_REALM: phpscotland2016
+      CROSSBAR_PORT: "${GBL_CROSSBAR_PORT}"
+      CROSSBAR_ZMQ_PULL_PORT: "${GBL_CROSSBAR_ZMQ_PULL_PORT}"
+      PYTHONUNBUFFERED: "1"
+    expose:
+      - "${GBL_CROSSBAR_PORT}" 
+      - "${GBL_CROSSBAR_ZMQ_PULL_PORT}"
+    network_mode: bridge
+  phpscotland2016-haproxy:
+    build:
+      context: ./haproxy
+    network_mode: bridge
+    ports:
+      - 443:443
+    links:
+      - phpscotland2016-webserver-a
+      - phpscotland2016-webserver-b
+      - phpscotland2016-rabbitmq
+      - phpscotland2016-crossbar
+    # Mount "secrets" that holds our private SSL certs
+    volumes:
+      - ./secrets:/etc/ajk.io/keys:ro
+  phpscotland2016-rabbitmq:
+    container_name: "phpscotland2016-rabbitmq"
+    expose:
+      - "${GBL_RMQ_PORT}" 
+      - 15671
+      - 15672
+    image: rabbitmq:3.6-management
+    network_mode: bridge
+  phpscotland2016-webserver-a:
+    build:
+      context: ./webserver
+    expose:
+      - 80
+    links:
+      - phpscotland2016-rabbitmq
+      - phpscotland2016-zmqbroker
+      - phpscotland2016-crossbar
+    volumes:
+      - ./webserver/src/public/talk:/var/www/html/public/talk
+      - ./crossbar/src:/var/www/html/public/crossbar
+      - ./rmqconsumer/src:/var/www/html/public/rmqconsumer
+      - ./webserver/src:/var/www/html/public/webserver
+      - ./zmqbroker/src:/var/www/html/public/zmqbroker
+      - ./zmqconsumer/src:/var/www/html/public/zmqconsumer
+    environment:
+      WEBAPP_PUSH_PORT: "${GBL_WEBAPP_PUSH_PORT}"
+      RMQ_HOST: "${GBL_RMQ_HOST}"
+      RMQ_PORT: "${GBL_RMQ_PORT}"
+      RMQ_USER: "${GBL_RMQ_USER}"
+      RMQ_PASS: "${GBL_RMQ_PASS}"
+      RMQ_QUEUE: "${GBL_RMQ_QUEUE}"
+      ZMQ_BROKER: "${GBL_ZMQ_BROKER}"
+      ZMQ_BROKER_FRONT_PORT: "${GBL_ZMQ_BROKER_FRONT_PORT}"
+      CROSSBAR_HOST: "${GBL_CROSSBAR_HOST}"
+      CROSSBAR_PORT: "${GBL_CROSSBAR_PORT}"
+    network_mode: bridge
+  phpscotland2016-webserver-b:
+    build:
+      context: ./webserver
+    expose:
+      - 80
+    links:
+      - phpscotland2016-rabbitmq
+      - phpscotland2016-zmqbroker
+      - phpscotland2016-crossbar
+    volumes:
+      - ./webserver/src/public/talk:/var/www/html/public/talk
+      - ./crossbar/src:/var/www/html/public/crossbar
+      - ./rmqconsumer/src:/var/www/html/public/rmqconsumer
+      - ./webserver/src:/var/www/html/public/webserver
+      - ./zmqbroker/src:/var/www/html/public/zmqbroker
+      - ./zmqconsumer/src:/var/www/html/public/zmqconsumer
+    environment:
+      WEBAPP_PUSH_PORT: "${GBL_WEBAPP_PUSH_PORT}"
+      RMQ_HOST: "${GBL_RMQ_HOST}"
+      RMQ_PORT: "${GBL_RMQ_PORT}"
+      RMQ_USER: "${GBL_RMQ_USER}"
+      RMQ_PASS: "${GBL_RMQ_PASS}"
+      RMQ_QUEUE: "${GBL_RMQ_QUEUE}"
+      ZMQ_BROKER: "${GBL_ZMQ_BROKER}"
+      ZMQ_BROKER_FRONT_PORT: "${GBL_ZMQ_BROKER_FRONT_PORT}"
+      CROSSBAR_HOST: "${GBL_CROSSBAR_HOST}"
+      CROSSBAR_PORT: "${GBL_CROSSBAR_PORT}"
+    network_mode: bridge
+  phpscotland2016-zmqbroker:
+    build:
+      context: ./zmqbroker
+    environment:
+      ZMQ_BROKER: "${GBL_ZMQ_BROKER}"
+      ZMQ_BROKER_FRONT_PORT: "${GBL_ZMQ_BROKER_FRONT_PORT}"
+      ZMQ_BROKER_BACK_PORT: "${GBL_ZMQ_BROKER_BACK_PORT}"
+      VERBOSE: "1"
+    expose:
+      - "${GBL_ZMQ_BROKER_FRONT_PORT}"
+      - "${GBL_ZMQ_BROKER_BACK_PORT}" 
+    network_mode: bridge
+  phpscotland2016-zmqconsumer:
+    build:
+      context: ./zmqconsumer
+    environment:
+      CROSSBAR_HOST: "${GBL_CROSSBAR_HOST}"
+      CROSSBAR_PORT: "${GBL_CROSSBAR_PORT}"
+      CROSSBAR_ZMQ_PULL_PORT: "${GBL_CROSSBAR_ZMQ_PULL_PORT}"
+      ZMQ_BROKER: "${GBL_ZMQ_BROKER}"
+      ZMQ_BROKER_BACK_PORT: "${GBL_ZMQ_BROKER_BACK_PORT}"
+      VERBOSE: "1"
+    links:
+      - phpscotland2016-zmqbroker
+      - phpscotland2016-crossbar
+    network_mode: bridge
+  phpscotland2016-rmqconsumer:
+    build:
+      context: ./rmqconsumer
+    environment:
+      RMQ_HOST: "${GBL_RMQ_HOST}"
+      RMQ_PORT: "${GBL_RMQ_PORT}"
+      RMQ_USER: "${GBL_RMQ_USER}"
+      RMQ_PASS: "${GBL_RMQ_PASS}"
+      RMQ_QUEUE: "${GBL_RMQ_QUEUE}"
+      CROSSBAR_HOST: "${GBL_CROSSBAR_HOST}"
+      CROSSBAR_ZMQ_PULL_PORT: "${GBL_CROSSBAR_ZMQ_PULL_PORT}"
+      VERBOSE: "1"
+    links:
+      - phpscotland2016-rabbitmq
+      - phpscotland2016-crossbar
+    network_mode: bridge
+volumes: {}
+
