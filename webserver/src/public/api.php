@@ -36,16 +36,23 @@ try {
 		$request->setParam("route", $type);
 		$request->setParam("wait_for", $wait);
 		$request->setParam("session_id", $session_id); 
+		$request->setParam("promise_idx", $counter); 
 		$impl = factory($type);
 		$response = $impl->handleRequest($request);
 		$arr = $response->getArray();
 		$display = [];
 		$display["hostname"] = "W:" . (isset($arr["hostname"]) ? $arr["hostname"] : gethostname());
+		$display["class"] = ($type == "direct" ? "promise_complete" : "promise_waiting");
+		$display["promise_idx"] = $counter;
 		if(isset($arr['msg'])) $display["msg"] = $arr["msg"];
 		$responses[] = json_encode($display, JSON_FORCE_OBJECT);
 		$times--;
 		$counter++;
 	}
+	$response = "[" . implode(",", $responses) . "]";
+	header("Content-Type: application/json");
+	echo $response;
+	exit(0);
 }
 catch(\Exception $e) {
 	$logs[] = $e->getMessage();

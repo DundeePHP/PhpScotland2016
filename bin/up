@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker-compose up -d --scale phpscotland2016-zmqconsumer=6 --scale phpscotland2016-rmqconsumer=3
+
