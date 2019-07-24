@@ -27,7 +27,7 @@ services:
       - phpscotland2016-crossbar
     # Mount "secrets" that holds our private SSL certs
     volumes:
-      - ./secrets:/etc/ajk.io/keys:ro
+      - ./secrets:/opt/keys:ro
   phpscotland2016-rabbitmq:
     container_name: "phpscotland2016-rabbitmq"
     expose:

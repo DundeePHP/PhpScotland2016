@@ -11,19 +11,23 @@
 	{
 		"type": "vcs",
 		"url": "https://github.com/A-j-K/PhpScotland2016-DemoServiceIf.git",
-		"package-path": "PhpScotland2016/DemoServiceInterface"
+		"package-path": "PhpScotland2016/DemoServiceInterface",
+		"no-api": true
 	},{
 		"type": "vcs",
 		"url": "https://github.com/stellartech/PhpScotland2016-DemoServiceImplDirect.git",
-		"package-path": "PhpScotland2016/DemoServiceImplDirect"
+		"package-path": "PhpScotland2016/DemoServiceImplDirect",
+		"no-api": true
 	},{
 		"type": "vcs",
 		"url": "https://github.com/stellartech/PhpScotland2016-DemoServiceImplZmq.git",
-		"package-path": "PhpScotland2016/DemoServiceImplZmq"
+		"package-path": "PhpScotland2016/DemoServiceImplZmq",
+		"no-api": true
 	},{
 		"type": "vcs",
 		"url": "https://github.com/stellartech/PhpScotland2016-DemoServiceImplRmq.git",
-		"package-path": "PhpScotland2016/DemoServiceImplRmq"
+		"package-path": "PhpScotland2016/DemoServiceImplRmq",
+		"no-api": true
 	}
 	],
 	"require": {
